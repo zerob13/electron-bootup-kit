@@ -1,10 +1,10 @@
+[CmdletBinding()]
 Param(
   [switch]$CheckOnly,
   [string[]]$Skip = @(),
   [switch]$NoConfirm,
   [ValidateSet('auto','choco','winget')]
-  [string]$PackageManager = 'auto',
-  [switch]$VerboseMode
+  [string]$PackageManager = 'auto'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -13,7 +13,7 @@ function Write-Info { param([string]$m) Write-Host "[INFO]  $m" -ForegroundColor
 function Write-Step { param([string]$m) Write-Host "==> $m" -ForegroundColor Green }
 function Write-Warn { param([string]$m) Write-Host "[WARN]  $m" -ForegroundColor Yellow }
 function Write-Err  { param([string]$m) Write-Host "[ERROR] $m" -ForegroundColor Red }
-function Write-Dbg  { param([string]$m) if ($VerboseMode) { Write-Host "[DEBUG] $m" -ForegroundColor DarkGray } }
+function Write-Dbg  { param([string]$m) Write-Verbose $m }
 
 function Should-Skip { param([string]$name) return ($Skip -contains $name -or $Skip -contains 'all') }
 
@@ -204,7 +204,7 @@ function Print-Versions {
 function Main {
   Write-Step "Windows Electron prerequisites setup"
 
-  if (-not (Test-Admin)) {
+  if (-not (Test-Admin) -and -not $CheckOnly) {
     Write-Err "This script must be run in an elevated PowerShell (Run as Administrator)."
     Write-Info "Right-click PowerShell and choose 'Run as Administrator', then re-run: ./windows.ps1"
     exit 1
@@ -260,6 +260,6 @@ try {
   Main
 } catch {
   Write-Err ("Failed: " + $_.Exception.Message)
-  if ($VerboseMode -and $_.Exception.StackTrace) { Write-Dbg $_.Exception.StackTrace }
+  if ($_.Exception.StackTrace) { Write-Dbg $_.Exception.StackTrace }
   exit 1
 }

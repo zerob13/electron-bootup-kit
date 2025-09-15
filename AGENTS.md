@@ -8,8 +8,8 @@
 ## Build, Test, and Development Commands
 - macOS run: `chmod +x mac.sh && ./mac.sh [--check-only] [--skip node|git|python|xcode] [--verbose]`
   - Installs/validates Xcode (App Store link) and Command Line Tools, Node LTS, Git, Python 3 via Homebrew; prints versions.
-- Windows run (elevated PowerShell): `Set-ExecutionPolicy Bypass -Scope Process -Force; ./windows.ps1 [-CheckOnly] [-Skip node,git,python,vs] [-NoConfirm] [-PackageManager auto|choco|winget] [-VerboseMode]`
-  - Installs/validates Node LTS, Git, Python via Chocolatey or Winget; installs VS 2022 Build Tools via Winget with override (C++ tools + Windows 11 SDK) or Chocolatey fallback; architecture-aware; prints versions.
+- Windows run (elevated PowerShell): `Set-ExecutionPolicy Bypass -Scope Process -Force; ./windows.ps1 [-CheckOnly] [-Skip node,git,python,vs] [-NoConfirm] [-PackageManager auto|choco|winget] [-Verbose]`
+  - Installs/validates Node LTS, Git, Python via Chocolatey or Winget; installs VS 2022 Build Tools via Winget with override (C++ tools + Windows 11 SDK) or Chocolatey fallback; architecture-aware; prints versions. Dry-run mode does not require elevation.
 - Lint (suggested): `shellcheck mac.sh` and `pwsh -NoLogo -Command Invoke-ScriptAnalyzer -Path ./windows.ps1`
 
 ## Coding Style & Naming Conventions
@@ -22,6 +22,7 @@
 ## Testing Guidelines
 - Smoke checks: verify `node -v`, `npm -v`, `git --version`, `python(3) -V` and detect VS Build Tools presence via `vswhere`/package manager.
 - Dry run: `--check-only`/`-CheckOnly` to list actions without changes.
+- CI: `.github/workflows/smoke.yml` runs macOS and Windows dry-run checks.
 - Static analysis: run ShellCheck/PSScriptAnalyzer locally; fix warnings of severity Error/Warning.
 
 ## Commit & Pull Request Guidelines

@@ -1,0 +1,27 @@
+name: Smoke
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Dry-run mac.sh
+        run: |
+          chmod +x ./mac.sh
+          ./mac.sh --check-only --verbose --skip xcode || true
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Dry-run windows.ps1
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          ./windows.ps1 -CheckOnly -Verbose -Skip node,git,python,vs
+

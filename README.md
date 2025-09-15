@@ -27,7 +27,7 @@ Usage
     - Winget: https://learn.microsoft.com/windows/package-manager/winget/
   - Open an elevated PowerShell (Run as Administrator), then:
     - `Set-ExecutionPolicy Bypass -Scope Process -Force`
-    - `./windows.ps1 [-CheckOnly] [-Skip node,git,python,vs] [-NoConfirm] [-PackageManager auto|choco|winget] [-VerboseMode]`
+    - `./windows.ps1 [-CheckOnly] [-Skip node,git,python,vs] [-NoConfirm] [-PackageManager auto|choco|winget] [-Verbose]`
 
 What the scripts do
 - Detect package manager; if missing, print install instructions and exit.
@@ -52,7 +52,7 @@ Troubleshooting
 - If PowerShell policy blocks the script, run `Set-ExecutionPolicy Bypass -Scope Process -Force` in the same session.
 
 Roadmap (short)
-- Add `--check-only`/`-CheckOnly` dry run.
-- Add `--skip/-Skip` for fine-grained control.
-- Add `--verbose/-Verbose` logging.
-- Add CI smoke checks to validate install steps.
+- Implemented: `--check-only`/`-CheckOnly` dry run.
+- Implemented: `--skip/-Skip` for fine-grained control.
+- Implemented: `--verbose/-Verbose` logging.
+- Implemented: CI smoke checks (GitHub Actions) to validate install steps in dry-run mode.
