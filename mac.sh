@@ -84,19 +84,6 @@ install_python() {
   install_brew_pkg python
 }
 
-ensure_npm_python3() {
-  if command_exists npm && command_exists python3; then
-    local cur
-    cur=$(npm config get python 2>/dev/null || echo "undefined")
-    dbg "npm python config: $cur"
-    if [[ "$cur" == "undefined" || "$cur" == "null" || "$cur" == "python" ]]; then
-      if $CHECK_ONLY; then info "[dry-run] Would set 'npm config set python python3'"; return; fi
-      step "Configuring npm to use python3 for node-gyp"
-      npm config set python python3 >/dev/null
-    fi
-  fi
-}
-
 print_versions() {
   step "Verifying installed tool versions"
   if command_exists node; then node -v; else warn "Node.js not found"; fi
@@ -160,8 +147,6 @@ main() {
   else
     install_python
   fi
-
-  ensure_npm_python3
 
   print_versions
   step "Setup completed"

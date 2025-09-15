@@ -33,7 +33,7 @@ What the scripts do
 - Detect package manager; if missing, print install instructions and exit.
 - Validate privileges; request sudo/elevation only when needed.
 - Install prerequisites with sensible defaults:
-  - macOS: `xcode-select --install` (if not present), `brew install node git python`, configure npm to use `python3` for node-gyp when needed.
+  - macOS: `xcode-select --install` (if not present), `brew install node git python`.
   - Windows: Node/Git/Python via Chocolatey or Winget; Visual Studio 2022 Build Tools via Winget with `--override` (C++ tools + Windows 11 SDK 22621), or Chocolatey fallback with equivalent parameters.
 - Architecture aware (Windows): skips VS Build Tools auto-install on non-x64 architectures with guidance to install manually.
 - Verify by printing versions: Node, npm, Git, Python, and detect VS Build Tools presence.

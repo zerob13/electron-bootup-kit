@@ -7,7 +7,7 @@
 
 ## Build, Test, and Development Commands
 - macOS run: `chmod +x mac.sh && ./mac.sh [--check-only] [--skip node|git|python|xcode] [--verbose]`
-  - Installs/validates Xcode (App Store link) and Command Line Tools, Node LTS, Git, Python 3 via Homebrew; configures npm to use python3 for node-gyp; prints versions.
+  - Installs/validates Xcode (App Store link) and Command Line Tools, Node LTS, Git, Python 3 via Homebrew; prints versions.
 - Windows run (elevated PowerShell): `Set-ExecutionPolicy Bypass -Scope Process -Force; ./windows.ps1 [-CheckOnly] [-Skip node,git,python,vs] [-NoConfirm] [-PackageManager auto|choco|winget] [-VerboseMode]`
   - Installs/validates Node LTS, Git, Python via Chocolatey or Winget; installs VS 2022 Build Tools via Winget with override (C++ tools + Windows 11 SDK) or Chocolatey fallback; architecture-aware; prints versions.
 - Lint (suggested): `shellcheck mac.sh` and `pwsh -NoLogo -Command Invoke-ScriptAnalyzer -Path ./windows.ps1`
