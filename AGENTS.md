@@ -6,20 +6,22 @@
 - No Node project here; these scripts prepare your machine for Electron projects.
 
 ## Build, Test, and Development Commands
-- macOS run: `chmod +x mac.sh && ./mac.sh`
-  - Installs/validates Xcode CLT, Node LTS, Git, Python 3 via Homebrew; prints versions.
-- Windows run (elevated PowerShell): `Set-ExecutionPolicy Bypass -Scope Process -Force; ./windows.ps1`
-  - Installs/validates Node LTS, Git, Python, and VS 2022 Build Tools via Chocolatey; prints versions.
-- Lint (suggested): `shellcheck mac.sh` and `pwsh -Command Invoke-ScriptAnalyzer windows.ps1`
+- macOS run: `chmod +x mac.sh && ./mac.sh [--check-only] [--skip node|git|python|xcode] [--verbose]`
+  - Installs/validates Xcode (App Store link) and Command Line Tools, Node LTS, Git, Python 3 via Homebrew; configures npm to use python3 for node-gyp; prints versions.
+- Windows run (elevated PowerShell): `Set-ExecutionPolicy Bypass -Scope Process -Force; ./windows.ps1 [-CheckOnly] [-Skip node,git,python,vs] [-NoConfirm] [-PackageManager auto|choco|winget] [-VerboseMode]`
+  - Installs/validates Node LTS, Git, Python via Chocolatey or Winget; installs VS 2022 Build Tools via Winget with override (C++ tools + Windows 11 SDK) or Chocolatey fallback; architecture-aware; prints versions.
+- Lint (suggested): `shellcheck mac.sh` and `pwsh -NoLogo -Command Invoke-ScriptAnalyzer -Path ./windows.ps1`
 
 ## Coding Style & Naming Conventions
 - Bash: use `#!/usr/bin/env bash`, `set -euo pipefail`, 2‑space indentation, lowercase function names, `main` entrypoint.
-- PowerShell: `CmdletBinding()` advanced functions, PascalCase for functions/parameters, 2‑space indentation, `$PSStyle`/Write-Host for clear statuses.
-- Flags (planned in README): `--check-only/--verbose/--skip` on macOS; `-CheckOnly/-Verbose/-Skip` on Windows. Keep parity across scripts.
+- PowerShell: clear helper functions for logging, colorized output, parameterized flags; 2‑space indentation.
+- Flags (implemented):
+  - macOS: `--check-only`, `--verbose`, `--skip <node|git|python|xcode>`
+  - Windows: `-CheckOnly`, `-VerboseMode`, `-Skip <node,git,python,vs>`, `-NoConfirm`, `-PackageManager auto|choco|winget`
 
 ## Testing Guidelines
-- Smoke checks: verify `node -v`, `npm -v`, `git --version`, `python(3) -V` and a minimal node-gyp detection step.
-- Dry run: implement and test `--check-only`/`-CheckOnly` to list actions without changes.
+- Smoke checks: verify `node -v`, `npm -v`, `git --version`, `python(3) -V` and detect VS Build Tools presence via `vswhere`/package manager.
+- Dry run: `--check-only`/`-CheckOnly` to list actions without changes.
 - Static analysis: run ShellCheck/PSScriptAnalyzer locally; fix warnings of severity Error/Warning.
 
 ## Commit & Pull Request Guidelines
@@ -31,6 +33,6 @@
 - Link issues and keep changes minimal and idempotent.
 
 ## Security & Configuration Tips
-- Do not auto-install Homebrew/Chocolatey; print official install URLs if missing (as implemented).
+- Do not auto-install Homebrew/Chocolatey/Winget; print official install URLs if missing (as implemented).
 - Request elevation only when needed; avoid modifying shell profiles.
 - Support proxies via `HTTP_PROXY`/`HTTPS_PROXY` and npm config; document any env usage in README.

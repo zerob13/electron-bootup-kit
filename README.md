@@ -5,11 +5,11 @@ Fast, one-command setup for Electron development prerequisites on macOS and Wind
 This repo provides two scripts that verify and install the tooling Electron depends on. It prefers your system package manager and stays idempotent: already-installed tools are skipped and summarized.
 
 What it installs
-- macOS: Homebrew check (no auto-install), Xcode Command Line Tools, Node.js LTS, npm, npx, Git, Python 3.
-- Windows: Chocolatey check (no auto-install), Visual Studio 2022 Build Tools (C++ workload + SDK), Node.js LTS, npm, npx, Git, Python 3.
+- macOS: Homebrew check (no auto-install), Xcode (App Store link) and Command Line Tools, Node.js LTS, npm, npx, Git, Python 3.
+- Windows: Package manager check (Chocolatey or Winget), Visual Studio 2022 Build Tools (C++ workload + Windows 11 SDK), Node.js LTS, npm, npx, Git, Python 3.
 
 Assumptions
-- macOS has Homebrew; Windows has Chocolatey. If missing, the scripts print a friendly message and the official install URL so you can install them manually.
+- macOS has Homebrew. Windows has Chocolatey or Winget. If neither is available on Windows (or Homebrew on macOS), the scripts print a friendly message and the official install URL so you can install them manually.
 - You can grant admin privileges when prompted (sudo on macOS, elevated PowerShell on Windows).
 - Electron itself is installed per-project via npm/yarn/pnpm. These scripts do not install Electron globally.
 
@@ -18,28 +18,28 @@ Usage
   - Ensure Homebrew is installed (the script checks and will print https://brew.sh/ if missing).
   - Run:
     - `chmod +x mac.sh`
-    - `./mac.sh`
-  - Optional flags (planned): `--check-only`, `--verbose`, `--no-sudo`, `--skip <pkg>`
+    - `./mac.sh [--check-only] [--skip node|git|python|xcode] [--verbose]`
+  - Behavior:
+    - If Xcode.app is missing, the script opens the App Store page for Xcode and suggests installing it; it also triggers the Command Line Tools installer when needed.
 - Windows (PowerShell)
-  - Ensure Chocolatey is installed (the script checks and will print https://chocolatey.org/install if missing).
+  - Ensure Chocolatey or Winget is installed. If neither is detected, the script prints:
+    - Chocolatey: https://chocolatey.org/install
+    - Winget: https://learn.microsoft.com/windows/package-manager/winget/
   - Open an elevated PowerShell (Run as Administrator), then:
     - `Set-ExecutionPolicy Bypass -Scope Process -Force`
-    - `./windows.ps1`
-  - Optional flags (planned): `-CheckOnly`, `-Verbose`, `-Skip <pkg>`, `-NoConfirm`
+    - `./windows.ps1 [-CheckOnly] [-Skip node,git,python,vs] [-NoConfirm] [-PackageManager auto|choco|winget] [-VerboseMode]`
 
 What the scripts do
 - Detect package manager; if missing, print install instructions and exit.
 - Validate privileges; request sudo/elevation only when needed.
 - Install prerequisites with sensible defaults:
-  - macOS: `xcode-select --install` (if not present), `brew install node git python`.
-  - Windows (Chocolatey): `choco install -y nodejs-lts git python visualstudio2022buildtools` with required VS components/workload for native addons.
-- Configure environment for native modules:
-  - macOS: ensure Python 3 is discoverable by node-gyp (e.g., `npm config set python python3` if needed).
-  - Windows: install the C++ build tools and Windows SDK; refresh environment (`refreshenv`).
-- Verify by printing versions: Node, npm, Git, Python, and a basic node-gyp check.
+  - macOS: `xcode-select --install` (if not present), `brew install node git python`, configure npm to use `python3` for node-gyp when needed.
+  - Windows: Node/Git/Python via Chocolatey or Winget; Visual Studio 2022 Build Tools via Winget with `--override` (C++ tools + Windows 11 SDK 22621), or Chocolatey fallback with equivalent parameters.
+- Architecture aware (Windows): skips VS Build Tools auto-install on non-x64 architectures with guidance to install manually.
+- Verify by printing versions: Node, npm, Git, Python, and detect VS Build Tools presence.
 
 Notes on Visual Studio Build Tools (Windows)
-- Electron native modules require MSVC, Windows SDK, and MSBuild. The script uses Chocolatey’s `visualstudio2022buildtools` with parameters to include the C++ build tools workload and SDK. This mirrors Electron’s official prerequisites.
+- Electron native modules require MSVC, Windows SDK, and MSBuild. The script installs `Microsoft.VisualStudio.2022.BuildTools` using Winget with an installer override to include the C++ tools and Windows 11 SDK, or uses Chocolatey’s `visualstudio2022buildtools` with equivalent package parameters.
 - If VS Build Tools are already installed, the script skips reinstallation.
 
 Non-goals
@@ -47,8 +47,8 @@ Non-goals
 - No modification of shell configuration files beyond what’s necessary for path availability.
 
 Troubleshooting
-- Proxy/corporate network: planned flags to pass proxy settings to brew/choco and npm.
-- Xcode CLT installer may show a GUI prompt; accept it to continue.
+- Proxy/corporate network: use environment variables `HTTP_PROXY` and `HTTPS_PROXY`; configure npm proxy as needed.
+- Xcode CLT installer may show a GUI prompt; accept it to continue. If Xcode.app is missing, install from the App Store.
 - If PowerShell policy blocks the script, run `Set-ExecutionPolicy Bypass -Scope Process -Force` in the same session.
 
 Roadmap (short)
@@ -56,4 +56,3 @@ Roadmap (short)
 - Add `--skip/-Skip` for fine-grained control.
 - Add `--verbose/-Verbose` logging.
 - Add CI smoke checks to validate install steps.
-
