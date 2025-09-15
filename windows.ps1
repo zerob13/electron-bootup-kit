@@ -254,6 +254,7 @@ function Main {
   Print-Versions
   Write-Step "Setup completed"
   Write-Info "If you just installed VS Build Tools, a reboot may be recommended."
+  try { $global:LASTEXITCODE = 0 } catch { }
 }
 
 try {
