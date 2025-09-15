@@ -1,0 +1,48 @@
+# OS junk
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+
+# Editor/IDE
+.idea/
+.vscode/
+*.code-workspace
+.history/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Caches
+.cache/
+.eslintcache
+
+# Build artifacts (common)
+dist/
+build/
+out/
+coverage/
+.nyc_output/
+
+# Node (if present in examples/tests)
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Env/config
+.env
+.env.*
+
+# Swap/backup
+*~
+*.swp
+*.swo
+
+# Project-specific
+task.md
